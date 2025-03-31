@@ -1,4 +1,4 @@
 package com.example.setec_api.dto;
 
-public class ResponseDTO {
+public record ResponseDTO (String name, String token){
 }

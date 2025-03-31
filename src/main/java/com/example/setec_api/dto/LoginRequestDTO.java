@@ -1,4 +1,4 @@
 package com.example.setec_api.dto;
 
-public class LoginRequestDTO {
+public record LoginRequestDTO (String name, String password){
 }

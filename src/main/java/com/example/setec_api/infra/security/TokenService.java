@@ -17,7 +17,7 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public void generateToken(User user) {
+    public String generateToken(User user) {
         try {
             // Algoritimo para armazenar a chave secreta
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -28,7 +28,7 @@ public class TokenService {
                     .withSubject(user.getName())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
-            return;
+            return token;
 
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Error enquanto estava autenticando");

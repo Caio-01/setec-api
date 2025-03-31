@@ -6,16 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+@Component
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Busca o usuário no banco pelo nome, se não encontrar lança uma exceção
         User user = this.repository.findByName(username).orElseThrow(() -> new UsernameNotFoundException("User nao encontrado"));
-        return new org.springframework.security.core.userdetails.User(user.getName(),user.getPassword(), new ArrayList<>());
+        // Retorna um obj UserDetails do Spring com nome, password e lista de permissão
+        return new org.springframework.security.core.userdetails.User(
+                user.getName(),
+                user.getPassword(),
+                new ArrayList<>()
+        );
+
     }
 }
