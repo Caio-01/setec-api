@@ -22,7 +22,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
     TokenService tokenService;
-
     @Autowired
     UserRepository userRepository;
 
@@ -33,8 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(login != null){
             // Se token for valido, vai buscar o usuario no banco, mas se nao encontrar orElseThrow lança a exceção
-            User user = userRepository.findByName(login)
-                    .orElseThrow(() -> new RuntimeException("User nao encontrado"));
+            User user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User nao encontrado"));
             var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")); // Collections.singletonList Cria uma lista com apenas um valor: autoridade (ROLE_USER) E SimpleGrantedAuthority representa a permissão/autorizaçao concedida peli user
             var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities); // UsernamePassword.. cria um obj de autenticaçao com usuario e suas permissoes
             SecurityContextHolder.getContext().setAuthentication(authentication); // Configura o contexto de segurança do Sping com o obj de autenticaçao
@@ -46,6 +44,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private String recoverToken(HttpServletRequest request){
         var authHeader = request.getHeader("Authorization"); // Pega o valor do cabeçalho Authorization da req HTTP
         if(authHeader == null) return null; // Se não existir o cabeçalho, vai retornar null
-        return authHeader.replace("Bearer", ""); // Remove o prefixo Bearer e os espaços em branco, apenas vai ter o token
+        return authHeader.replace("Bearer ", ""); // Remove o prefixo Bearer e os espaços em branco, apenas vai ter o token
     }
 }

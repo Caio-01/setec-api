@@ -28,8 +28,8 @@ public class AuthController {
     // Requisição de Login
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        User user = this.respository.findByName(body.name()).orElseThrow(() -> new RuntimeException("User nao encontrado"));
-        if(passwordEncoder.matches(user.getPassword(), body.password())){
+        User user = this.respository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User nao encontrado"));
+        if(passwordEncoder.matches(body.password(), user.getPassword())){
             String token = this.tokenService.generateToken(user);
 
             return ResponseEntity.ok(new ResponseDTO(user.getName(), token));
@@ -41,14 +41,13 @@ public class AuthController {
     // Requisição de Register
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequestDTO body){
-        Optional<User> user = this.respository.findByName(body.name());
+        Optional<User> user = this.respository.findByEmail(body.email());
         // Se o usuario nao estiver criado
         if(user.isEmpty()){
             User newUser = new User();
             newUser.setPassword(passwordEncoder.encode(body.password()));
-            newUser.setName(body.name());
             newUser.setEmail(body.email());
-
+            newUser.setName(body.name());
             // Salva no repository
             this.respository.save(newUser);
 

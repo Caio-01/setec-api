@@ -25,7 +25,7 @@ public class TokenService {
             // Configurando para gerar o token
             String token = JWT.create()
                     .withIssuer("setec-api")
-                    .withSubject(user.getName())
+                    .withSubject(user.getEmail())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
             return token;
@@ -55,6 +55,6 @@ public class TokenService {
 
     // Metodo responsavel da expiração do Token
     private Instant generateExpirationDate(){
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("Menos tres horas"));
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }
