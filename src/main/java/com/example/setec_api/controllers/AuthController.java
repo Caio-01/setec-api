@@ -28,27 +28,30 @@ public class AuthController {
     // Requisição de Login
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
+        // Procura um usuário com o email fornecido
         User user = this.respository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User nao encontrado"));
+        // Verifica se a senha enviada bate com a que esta no banco cripto
         if(passwordEncoder.matches(body.password(), user.getPassword())){
-            String token = this.tokenService.generateToken(user);
+            String token = this.tokenService.generateToken(user);// Gera um token JWT
 
-            return ResponseEntity.ok(new ResponseDTO(user.getName(), token));
+            return ResponseEntity.ok(new ResponseDTO(user.getName(), token));// Retorna um obj com nome e token
         }
-        // Se as senhas não der matches
+        // Se as senhas não der matches, retorna um erro 400
         return ResponseEntity.badRequest().build();
     }
 
     // Requisição de Register
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequestDTO body){
+        // Verifica se ja existe algum usuario criado com esse email
         Optional<User> user = this.respository.findByEmail(body.email());
-        // Se o usuario nao estiver criado
+        // Se não existir faz o cadastro
         if(user.isEmpty()){
             User newUser = new User();
             newUser.setPassword(passwordEncoder.encode(body.password()));
             newUser.setEmail(body.email());
             newUser.setName(body.name());
-            // Salva no repository
+            // Salva o usuario no banco (repository)
             this.respository.save(newUser);
 
             // Gera o token
@@ -56,6 +59,7 @@ public class AuthController {
             return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token));
 
         }
+        // Se o email ja estiver cadastrado, retorna um erro 400
         return ResponseEntity.badRequest().build();
     }
 }
