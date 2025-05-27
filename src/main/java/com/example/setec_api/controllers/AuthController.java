@@ -1,6 +1,6 @@
 package com.example.setec_api.controllers;
 
-import com.example.setec_api.domain.user.User;
+import com.example.setec_api.entities.User;
 import com.example.setec_api.dto.LoginRequestDTO;
 import com.example.setec_api.dto.RegisterRequestDTO;
 import com.example.setec_api.dto.ResponseDTO;

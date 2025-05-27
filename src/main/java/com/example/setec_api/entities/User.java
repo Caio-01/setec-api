@@ -1,4 +1,4 @@
-package com.example.setec_api.domain.user;
+package com.example.setec_api.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

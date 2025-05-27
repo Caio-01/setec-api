@@ -1,6 +1,6 @@
 package com.example.setec_api.infra.security;
 
-import com.example.setec_api.domain.user.User;
+import com.example.setec_api.entities.User;
 import com.example.setec_api.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
